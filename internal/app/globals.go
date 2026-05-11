@@ -149,6 +149,7 @@ var (
 )
 
 var alerter *Alerter
+var statusMode bool
 
 var (
 	cpuUsage = prometheus.NewGauge(
