@@ -148,6 +148,8 @@ var (
 	linkInfoMutex          sync.RWMutex
 )
 
+var alerter *Alerter
+
 var (
 	cpuUsage = prometheus.NewGauge(
 		prometheus.GaugeOpts{

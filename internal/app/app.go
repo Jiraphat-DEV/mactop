@@ -608,6 +608,9 @@ func drainSeededMetrics() {
 	select {
 	case cpuMetrics := <-cpuMetricsChan:
 		lastCPUMetrics = cpuMetrics
+		if alerter != nil {
+			alerter.OnCPUMetrics(cpuMetrics)
+		}
 		updateCPUUI(cpuMetrics)
 		updateTotalPowerChart(cpuMetrics.PackageW)
 	default:
@@ -698,6 +701,7 @@ func Run() {
 	parseCommandLineFlags()
 
 	loadConfig()
+	alerter = NewAlerter(ResolveAlertsConfig(currentConfig.Alerts), newStderrNotifier(stderrLogger))
 
 	// Load saved sort column from config (only if explicitly set)
 	if currentConfig.SortColumn != nil && *currentConfig.SortColumn >= 0 && *currentConfig.SortColumn < len(columns) {
@@ -895,6 +899,9 @@ func updateCPUUI(cpuMetrics CPUMetrics) {
 	updatePowerChartText(cpuMetrics, thermalStr)
 
 	memoryMetrics := getMemoryMetrics()
+	if alerter != nil {
+		alerter.OnMemory(memoryMetrics)
+	}
 	updateMemoryGaugeTitle(memoryMetrics)
 	memoryPercent := (float64(memoryMetrics.Used) / float64(memoryMetrics.Total)) * 100
 	memoryGauge.Percent = int(memoryPercent)

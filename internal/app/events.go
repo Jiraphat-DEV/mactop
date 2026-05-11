@@ -18,6 +18,9 @@ func startBackgroundUpdates(done chan struct{}) {
 				case cpuMetrics := <-cpuMetricsChan:
 					renderMutex.Lock()
 					lastCPUMetrics = cpuMetrics
+					if alerter != nil {
+						alerter.OnCPUMetrics(cpuMetrics)
+					}
 					updateCPUUI(cpuMetrics)
 					updateTotalPowerChart(cpuMetrics.PackageW)
 					renderMutex.Unlock()
