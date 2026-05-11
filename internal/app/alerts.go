@@ -6,6 +6,8 @@ import (
 	"log"
 	"sync"
 	"time"
+
+	"github.com/metaspartan/mactop/v2/internal/i18n"
 )
 
 type Severity int
@@ -166,19 +168,20 @@ func (a *Alerter) limitFor(src AlertSource) (limit, hyst float64) {
 }
 
 func formatAlertMessage(src AlertSource, value float64, fired bool) string {
-	verb := "recovered"
+	verbKey := "Alerts_Recovered"
 	if fired {
-		verb = "exceeded"
+		verbKey = "Alerts_Exceeded"
 	}
+	verb := i18n.T(verbKey)
 	switch src {
 	case AlertSourceCPUTemp:
-		return fmt.Sprintf("CPU temperature %s: %.1f°C", verb, value)
+		return fmt.Sprintf(i18n.T("Alerts_CPUTemp"), verb, value)
 	case AlertSourceGPUTemp:
-		return fmt.Sprintf("GPU temperature %s: %.1f°C", verb, value)
+		return fmt.Sprintf(i18n.T("Alerts_GPUTemp"), verb, value)
 	case AlertSourcePackagePower:
-		return fmt.Sprintf("Package power %s: %.1fW", verb, value)
+		return fmt.Sprintf(i18n.T("Alerts_PackagePower"), verb, value)
 	case AlertSourceMemory:
-		return fmt.Sprintf("Memory usage %s: %.1f%%", verb, value)
+		return fmt.Sprintf(i18n.T("Alerts_Memory"), verb, value)
 	}
 	return ""
 }

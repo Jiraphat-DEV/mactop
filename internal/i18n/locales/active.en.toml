@@ -330,6 +330,16 @@ Overlay_GPUFreqMHz = "%d MHz"
 Overlay_TempsDual = "CPU %.0f°C  GPU %.0f°C"
 Overlay_TempsSingle = "%.0f°C"
 
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"
+
 # Fan modes & temperature categories
 Fan_Mode_Auto = "Auto"
 Fan_Mode_Manual = "Manual"

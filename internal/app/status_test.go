@@ -3,7 +3,11 @@ package app
 import (
 	"strings"
 	"testing"
+
+	"github.com/metaspartan/mactop/v2/internal/i18n"
 )
+
+func init() { i18n.Init("en") }
 
 func TestClassifyStatus(t *testing.T) {
 	cfg := DefaultAlertsConfig()

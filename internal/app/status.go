@@ -4,6 +4,8 @@ package app
 import (
 	"fmt"
 	"os"
+
+	"github.com/metaspartan/mactop/v2/internal/i18n"
 )
 
 // classifyStatus returns the worst severity across all monitored axes.
@@ -40,11 +42,11 @@ func classifyStatus(cfg AlertsConfig, cpuTempC, gpuTempC, packageW, memPct float
 func severityGlyph(s Severity) string {
 	switch s {
 	case SeverityCritical:
-		return "🔴 Critical"
+		return "🔴 " + i18n.T("Status_Critical")
 	case SeverityWarning:
-		return "🟡 Warning"
+		return "🟡 " + i18n.T("Status_Warning")
 	}
-	return "🟢 Normal"
+	return "🟢 " + i18n.T("Status_Normal")
 }
 
 type statusSnapshot struct {

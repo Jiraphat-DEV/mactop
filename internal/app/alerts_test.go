@@ -5,7 +5,11 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/metaspartan/mactop/v2/internal/i18n"
 )
+
+func init() { i18n.Init("en") }
 
 func TestDefaultAlertsConfig(t *testing.T) {
 	cfg := DefaultAlertsConfig()
