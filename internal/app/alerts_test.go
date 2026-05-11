@@ -200,3 +200,70 @@ func TestStderrNotifier_WritesEventToLogger(t *testing.T) {
 		t.Errorf("log output missing message: %q", buf.String())
 	}
 }
+
+func TestAlerter_Check_PromotesToCriticalAboveCritDelta(t *testing.T) {
+	cfg := DefaultAlertsConfig()
+	cfg.CPUTempC = 85
+	cfg.HysteresisC = 3
+	cfg.CooldownMs = 0
+	n := &captureNotifier{}
+	a := NewAlerter(cfg, n)
+
+	a.Check(AlertSourceCPUTemp, 90) // warning (above 85, below 95)
+	if len(n.got) != 1 {
+		t.Fatalf("expected 1 event, got %d", len(n.got))
+	}
+	if n.got[0].Severity != SeverityWarning {
+		t.Errorf("first event severity = %v, want Warning", n.got[0].Severity)
+	}
+	// Force a recover then re-cross at higher value so we re-fire on a Critical band.
+	a.Check(AlertSourceCPUTemp, 80) // recover (below 85-3=82)
+	a.Check(AlertSourceCPUTemp, 99) // re-fire — 99 >= 85+10 → Critical
+	if len(n.got) != 3 {
+		t.Fatalf("expected 3 events (warn, recover, critical), got %d: %+v", len(n.got), n.got)
+	}
+	if n.got[2].Severity != SeverityCritical {
+		t.Errorf("third event severity = %v, want Critical", n.got[2].Severity)
+	}
+}
+
+func TestAlerter_Check_PackagePowerCriticalAt125Percent(t *testing.T) {
+	cfg := DefaultAlertsConfig()
+	cfg.PackagePowerW = 40
+	cfg.HysteresisPct = 5
+	cfg.CooldownMs = 0
+	n := &captureNotifier{}
+	a := NewAlerter(cfg, n)
+
+	a.Check(AlertSourcePackagePower, 45) // warning (above 40, below 50 = 40+25%)
+	a.Check(AlertSourcePackagePower, 30) // recover (below 40-5=35)
+	a.Check(AlertSourcePackagePower, 55) // re-fire — 55 >= 50 → Critical
+	if len(n.got) != 3 {
+		t.Fatalf("expected 3 events, got %d", len(n.got))
+	}
+	if n.got[0].Severity != SeverityWarning {
+		t.Errorf("first severity = %v, want Warning", n.got[0].Severity)
+	}
+	if n.got[2].Severity != SeverityCritical {
+		t.Errorf("third severity = %v, want Critical", n.got[2].Severity)
+	}
+}
+
+func TestAlerter_Check_MemoryCriticalAtLimitPlus5pp(t *testing.T) {
+	cfg := DefaultAlertsConfig()
+	cfg.MemoryUsedPct = 90
+	cfg.HysteresisPct = 5
+	cfg.CooldownMs = 0
+	n := &captureNotifier{}
+	a := NewAlerter(cfg, n)
+
+	a.Check(AlertSourceMemory, 92) // warning (above 90, below 95)
+	a.Check(AlertSourceMemory, 80) // recover (below 90-5=85)
+	a.Check(AlertSourceMemory, 96) // re-fire — 96 >= 95 → Critical
+	if len(n.got) != 3 {
+		t.Fatalf("expected 3 events, got %d", len(n.got))
+	}
+	if n.got[2].Severity != SeverityCritical {
+		t.Errorf("third severity = %v, want Critical", n.got[2].Severity)
+	}
+}

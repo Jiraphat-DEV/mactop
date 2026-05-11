@@ -126,9 +126,13 @@ func (a *Alerter) Check(src AlertSource, value float64) {
 		st.triggered = true
 		st.lastFire = now
 		a.state[src] = st
+		sev := SeverityWarning
+		if critDelta := a.critDeltaFor(src); critDelta > 0 && value >= limit+critDelta {
+			sev = SeverityCritical
+		}
 		a.notifier.Notify(AlertEvent{
 			Source:    src,
-			Severity:  SeverityWarning,
+			Severity:  sev,
 			Value:     value,
 			Limit:     limit,
 			Triggered: true,
@@ -165,6 +169,20 @@ func (a *Alerter) limitFor(src AlertSource) (limit, hyst float64) {
 		return a.cfg.MemoryUsedPct, a.cfg.HysteresisPct
 	}
 	return 0, 0
+}
+
+// critDeltaFor returns the additional margin above the limit at which a
+// Warning escalates to Critical. Per-axis values mirror classifyStatus.
+func (a *Alerter) critDeltaFor(src AlertSource) float64 {
+	switch src {
+	case AlertSourceCPUTemp, AlertSourceGPUTemp:
+		return 10.0
+	case AlertSourcePackagePower:
+		return a.cfg.PackagePowerW * 0.25
+	case AlertSourceMemory:
+		return 5.0
+	}
+	return 0
 }
 
 func formatAlertMessage(src AlertSource, value float64, fired bool) string {
