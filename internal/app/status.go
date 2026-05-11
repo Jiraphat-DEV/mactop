@@ -1,7 +1,10 @@
 // internal/app/status.go
 package app
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 // classifyStatus returns the worst severity across all monitored axes.
 // Warning = above limit. Critical = above limit + 10% (temp: +10°C, power: 25%, memory: +5pp absolute).
@@ -74,4 +77,51 @@ func humanKBps(kbps float64) string {
 		return fmt.Sprintf("%.1fMB", kbps/1024)
 	}
 	return fmt.Sprintf("%.0fKB", kbps)
+}
+
+// runStatusOneLiner samples a single metric snapshot and prints a one-line
+// summary, then exits. Called from runAlternateMode when --status is set.
+func runStatusOneLiner() {
+	if err := initSocMetrics(); err != nil {
+		fmt.Fprintf(os.Stderr, "mactop status: failed to init metrics: %v\n", err)
+		os.Exit(1)
+	}
+	defer cleanupSocMetrics()
+
+	// Warm up CPU percent counter (delta-based; first call returns zero).
+	_, _ = GetCPUPercentages()
+
+	m := sampleSocMetrics(200)
+	mem := getMemoryMetrics()
+	netDisk := getNetDiskMetrics()
+
+	cpuPercents, _ := GetCPUPercentages()
+	var cpuAvg float64
+	if len(cpuPercents) > 0 {
+		var sum float64
+		for _, p := range cpuPercents {
+			sum += p
+		}
+		cpuAvg = sum / float64(len(cpuPercents))
+	}
+
+	var memPct float64
+	if mem.Total > 0 {
+		memPct = float64(mem.Used) / float64(mem.Total) * 100
+	}
+
+	cfg := ResolveAlertsConfig(currentConfig.Alerts)
+	sev := classifyStatus(cfg, float64(m.CPUTemp), float64(m.GPUTemp), m.TotalPower, memPct)
+
+	fmt.Println(formatStatusLine(statusSnapshot{
+		Severity:   sev,
+		CPUPct:     cpuAvg,
+		CPUTempC:   float64(m.CPUTemp),
+		GPUPct:     m.GPUActive,
+		GPUTempC:   float64(m.GPUTemp),
+		PackageW:   m.TotalPower,
+		MemoryPct:  memPct,
+		NetInKBps:  netDisk.InBytesPerSec / 1024,
+		NetOutKBps: netDisk.OutBytesPerSec / 1024,
+	}))
 }
