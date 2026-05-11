@@ -1,6 +1,9 @@
 package app
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestClassifyStatus(t *testing.T) {
 	cfg := DefaultAlertsConfig()
@@ -30,5 +33,33 @@ func TestClassifyStatus(t *testing.T) {
 				t.Errorf("classifyStatus = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestFormatStatusLine(t *testing.T) {
+	snap := statusSnapshot{
+		Severity:   SeverityNormal,
+		CPUPct:     14,
+		CPUTempC:   45,
+		GPUPct:     8,
+		GPUTempC:   41,
+		PackageW:   8.2,
+		MemoryPct:  61,
+		NetInKBps:  340,
+		NetOutKBps: 1228, // → 1.2MB
+	}
+	got := formatStatusLine(snap)
+
+	for _, want := range []string{
+		"🟢 Normal",
+		"CPU 14%", "45°C",
+		"GPU 8%", "41°C",
+		"8.2W",
+		"RAM 61%",
+		"↑1.2MB", "↓340KB",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("formatStatusLine missing %q in %q", want, got)
+		}
 	}
 }

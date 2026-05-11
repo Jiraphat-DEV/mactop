@@ -1,6 +1,8 @@
 // internal/app/status.go
 package app
 
+import "fmt"
+
 // classifyStatus returns the worst severity across all monitored axes.
 // Warning = above limit. Critical = above limit + 10% (temp: +10°C, power: 25%, memory: +5pp absolute).
 func classifyStatus(cfg AlertsConfig, cpuTempC, gpuTempC, packageW, memPct float64) Severity {
@@ -40,4 +42,36 @@ func severityGlyph(s Severity) string {
 		return "🟡 Warning"
 	}
 	return "🟢 Normal"
+}
+
+type statusSnapshot struct {
+	Severity   Severity
+	CPUPct     float64
+	CPUTempC   float64
+	GPUPct     float64
+	GPUTempC   float64
+	PackageW   float64
+	MemoryPct  float64
+	NetInKBps  float64
+	NetOutKBps float64
+}
+
+func formatStatusLine(s statusSnapshot) string {
+	return fmt.Sprintf(
+		"%s  |  CPU %.0f%%  %.0f°C  |  GPU %.0f%%  %.0f°C  |  %.1fW  |  RAM %.0f%%  |  ↑%s ↓%s",
+		severityGlyph(s.Severity),
+		s.CPUPct, s.CPUTempC,
+		s.GPUPct, s.GPUTempC,
+		s.PackageW,
+		s.MemoryPct,
+		humanKBps(s.NetOutKBps),
+		humanKBps(s.NetInKBps),
+	)
+}
+
+func humanKBps(kbps float64) string {
+	if kbps >= 1024 {
+		return fmt.Sprintf("%.1fMB", kbps/1024)
+	}
+	return fmt.Sprintf("%.0fKB", kbps)
 }
