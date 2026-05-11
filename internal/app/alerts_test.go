@@ -29,3 +29,43 @@ func TestDefaultAlertsConfig(t *testing.T) {
 		t.Errorf("Enabled default = false, want true")
 	}
 }
+
+func TestAppConfigCarriesAlerts(t *testing.T) {
+	cfg := AppConfig{Alerts: &AlertsConfig{CPUTempC: 70, Enabled: true}}
+	if cfg.Alerts == nil {
+		t.Fatal("Alerts nil")
+	}
+	if cfg.Alerts.CPUTempC != 70 {
+		t.Errorf("CPUTempC = %v, want 70", cfg.Alerts.CPUTempC)
+	}
+}
+
+func TestResolveAlertsConfigFallsBackToDefaults(t *testing.T) {
+	got := ResolveAlertsConfig(nil)
+	want := DefaultAlertsConfig()
+	if got != want {
+		t.Errorf("ResolveAlertsConfig(nil) = %+v, want %+v", got, want)
+	}
+}
+
+func TestResolveAlertsConfigMergesUserOverrides(t *testing.T) {
+	override := &AlertsConfig{Enabled: true, CPUTempC: 75}
+	got := ResolveAlertsConfig(override)
+	if got.CPUTempC != 75 {
+		t.Errorf("CPUTempC = %v, want 75", got.CPUTempC)
+	}
+	if got.GPUTempC != 85 {
+		t.Errorf("GPUTempC = %v, want 85 (default kept)", got.GPUTempC)
+	}
+	if !got.Enabled {
+		t.Errorf("Enabled = false, want true (override said true)")
+	}
+}
+
+func TestResolveAlertsConfigUserCanDisable(t *testing.T) {
+	override := &AlertsConfig{Enabled: false, CPUTempC: 75}
+	got := ResolveAlertsConfig(override)
+	if got.Enabled {
+		t.Errorf("Enabled = true, want false (override said false)")
+	}
+}

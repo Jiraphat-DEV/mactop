@@ -26,3 +26,40 @@ func DefaultAlertsConfig() AlertsConfig {
 		CooldownMs:    30000,
 	}
 }
+
+// ResolveAlertsConfig returns defaults merged with non-zero user overrides.
+// A nil override returns DefaultAlertsConfig() unchanged.
+//
+// Semantics for Enabled: a non-nil user config is taken at face value —
+// if you write `"alerts": {"cpu_temp_c": 75}` and omit "enabled", you get
+// Enabled=false. Document this in README: setting any alerts field means
+// you must also set "enabled": true to keep alerts firing.
+func ResolveAlertsConfig(user *AlertsConfig) AlertsConfig {
+	out := DefaultAlertsConfig()
+	if user == nil {
+		return out
+	}
+	out.Enabled = user.Enabled
+	if user.CPUTempC > 0 {
+		out.CPUTempC = user.CPUTempC
+	}
+	if user.GPUTempC > 0 {
+		out.GPUTempC = user.GPUTempC
+	}
+	if user.PackagePowerW > 0 {
+		out.PackagePowerW = user.PackagePowerW
+	}
+	if user.MemoryUsedPct > 0 {
+		out.MemoryUsedPct = user.MemoryUsedPct
+	}
+	if user.HysteresisC > 0 {
+		out.HysteresisC = user.HysteresisC
+	}
+	if user.HysteresisPct > 0 {
+		out.HysteresisPct = user.HysteresisPct
+	}
+	if user.CooldownMs > 0 {
+		out.CooldownMs = user.CooldownMs
+	}
+	return out
+}
