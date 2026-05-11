@@ -1,6 +1,8 @@
 package app
 
 import (
+	"log"
+	"strings"
 	"testing"
 	"time"
 )
@@ -182,5 +184,15 @@ func TestAlerter_OnMemory_FiresOnPct(t *testing.T) {
 	}
 	if n.got[0].Source != AlertSourceMemory {
 		t.Errorf("source = %v, want memory", n.got[0].Source)
+	}
+}
+
+func TestStderrNotifier_WritesEventToLogger(t *testing.T) {
+	var buf strings.Builder
+	logger := log.New(&buf, "", 0)
+	n := &stderrNotifier{logger: logger}
+	n.Notify(AlertEvent{Source: AlertSourceCPUTemp, Triggered: true, Value: 91, Limit: 85, Severity: SeverityWarning, Message: "CPU 91°C"})
+	if !strings.Contains(buf.String(), "CPU 91") {
+		t.Errorf("log output missing message: %q", buf.String())
 	}
 }

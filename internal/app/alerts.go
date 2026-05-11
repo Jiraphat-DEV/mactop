@@ -3,6 +3,7 @@ package app
 
 import (
 	"fmt"
+	"log"
 	"sync"
 	"time"
 )
@@ -198,4 +199,16 @@ func (a *Alerter) OnMemory(m MemoryMetrics) {
 	}
 	pct := float64(m.Used) / float64(m.Total) * 100.0
 	a.Check(AlertSourceMemory, pct)
+}
+
+type stderrNotifier struct {
+	logger *log.Logger
+}
+
+func newStderrNotifier(logger *log.Logger) *stderrNotifier {
+	return &stderrNotifier{logger: logger}
+}
+
+func (s *stderrNotifier) Notify(ev AlertEvent) {
+	s.logger.Printf("alert: %s", ev.Message)
 }
