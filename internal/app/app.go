@@ -707,6 +707,14 @@ func Run() {
 	// to their default values, which would clear the statusMode flag set by handleLegacyFlags.
 	if statusMode {
 		loadConfig()
+		// Resolve language: CLI flag > MACTOP_LANG > config.json > earlier system default.
+		lang := earlyResolveLanguage()
+		if lang == "" {
+			lang = currentConfig.Language
+		}
+		if lang != "" {
+			i18n.Init(lang)
+		}
 		runStatusOneLiner()
 		return
 	}
