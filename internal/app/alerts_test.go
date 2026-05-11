@@ -1,6 +1,9 @@
 package app
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestDefaultAlertsConfig(t *testing.T) {
 	cfg := DefaultAlertsConfig()
@@ -125,5 +128,28 @@ func TestAlerter_FiresAndRecoversWithHysteresis(t *testing.T) {
 	}
 	if n.got[1].Triggered {
 		t.Errorf("event 1 should be recover, got triggered=true")
+	}
+}
+
+func TestAlerter_CooldownSuppressesRefire(t *testing.T) {
+	cfg := DefaultAlertsConfig()
+	cfg.CPUTempC = 85
+	cfg.HysteresisC = 3
+	cfg.CooldownMs = 30000
+	n := &captureNotifier{}
+	a := NewAlerter(cfg, n)
+
+	clock := time.Unix(0, 0)
+	a.now = func() time.Time { return clock }
+
+	a.Check(AlertSourceCPUTemp, 90) // fire
+	a.Check(AlertSourceCPUTemp, 80) // recover
+	clock = clock.Add(5 * time.Second)
+	a.Check(AlertSourceCPUTemp, 90) // within cooldown window → suppressed
+	clock = clock.Add(30 * time.Second)
+	a.Check(AlertSourceCPUTemp, 90) // past cooldown → fires again
+
+	if len(n.got) != 3 {
+		t.Fatalf("expected 3 events (fire, recover, fire), got %d: %+v", len(n.got), n.got)
 	}
 }
