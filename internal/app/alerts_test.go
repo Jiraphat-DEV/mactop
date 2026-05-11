@@ -153,3 +153,34 @@ func TestAlerter_CooldownSuppressesRefire(t *testing.T) {
 		t.Fatalf("expected 3 events (fire, recover, fire), got %d: %+v", len(n.got), n.got)
 	}
 }
+
+func TestAlerter_OnCPUMetrics_RoutesAllSources(t *testing.T) {
+	cfg := DefaultAlertsConfig()
+	cfg.CPUTempC = 50
+	cfg.GPUTempC = 50
+	cfg.PackagePowerW = 10
+	n := &captureNotifier{}
+	a := NewAlerter(cfg, n)
+
+	a.OnCPUMetrics(CPUMetrics{CPUTemp: 90, GPUTemp: 90, PackageW: 30})
+
+	if len(n.got) != 3 {
+		t.Fatalf("expected 3 fire events, got %d: %+v", len(n.got), n.got)
+	}
+}
+
+func TestAlerter_OnMemory_FiresOnPct(t *testing.T) {
+	cfg := DefaultAlertsConfig()
+	cfg.MemoryUsedPct = 80
+	n := &captureNotifier{}
+	a := NewAlerter(cfg, n)
+
+	a.OnMemory(MemoryMetrics{Total: 100, Used: 90})
+
+	if len(n.got) != 1 {
+		t.Fatalf("expected 1 event, got %d", len(n.got))
+	}
+	if n.got[0].Source != AlertSourceMemory {
+		t.Errorf("source = %v, want memory", n.got[0].Source)
+	}
+}

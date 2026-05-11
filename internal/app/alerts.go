@@ -181,3 +181,21 @@ func formatAlertMessage(src AlertSource, value float64, fired bool) string {
 	}
 	return ""
 }
+
+// OnCPUMetrics inspects the CPU/GPU temp and package power fields of a
+// CPUMetrics snapshot (the same struct used by the existing metrics loop)
+// and routes each to Check.
+func (a *Alerter) OnCPUMetrics(m CPUMetrics) {
+	a.Check(AlertSourceCPUTemp, m.CPUTemp)
+	a.Check(AlertSourceGPUTemp, m.GPUTemp)
+	a.Check(AlertSourcePackagePower, m.PackageW)
+}
+
+// OnMemory computes used-percent from MemoryMetrics and routes to Check.
+func (a *Alerter) OnMemory(m MemoryMetrics) {
+	if m.Total == 0 {
+		return
+	}
+	pct := float64(m.Used) / float64(m.Total) * 100.0
+	a.Check(AlertSourceMemory, pct)
+}
