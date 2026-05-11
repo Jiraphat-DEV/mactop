@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <формат>   Установить формат вывода (json, yaml, xml, csv, toon)
       --pretty            Форматированный вывод в headless режиме
       --count <n>         Количество выборок в headless режиме (0 = бесконечно)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Показать все доступные каналы IOReport и выйти
       --unit-network <ед> Единица сети: auto, byte, kb, mb, gb (по умолчанию: auto)
       --unit-disk <ед>    Единица диска: auto, byte, kb, mb, gb (по умолчанию: auto)

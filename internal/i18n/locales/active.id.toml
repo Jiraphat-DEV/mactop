@@ -232,6 +232,7 @@ Opsi:
       --format <format>   Atur format output (json, yaml, xml, csv, toon)
       --pretty            Format output headless
       --count <n>         Jumlah sampel dalam mode headless (0 = tak terbatas)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Tampilkan semua kanal IOReport yang tersedia dan keluar
       --unit-network <unit> Unit jaringan: auto, byte, kb, mb, gb (default: auto)
       --unit-disk <unit>    Unit disk: auto, byte, kb, mb, gb (default: auto)

@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <รูปแบบ>    ตั้งรูปแบบเอาต์พุต (json, yaml, xml, csv, toon)
       --pretty            จัดรูปแบบเอาต์พุต headless
       --count <n>         จำนวนตัวอย่างในโหมด headless (0 = ไม่จำกัด)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d แสดงทุกช่อง IOReport ที่มีและออก
       --unit-network <หน่วย> หน่วยเครือข่าย: auto, byte, kb, mb, gb (ค่าเริ่มต้น: auto)
       --unit-disk <หน่วย>    หน่วยดิสก์: auto, byte, kb, mb, gb (ค่าเริ่มต้น: auto)

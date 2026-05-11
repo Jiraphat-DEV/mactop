@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <صيغة>     تعيين صيغة الإخراج (json, yaml, xml, csv, toon)
       --pretty            تنسيق إخراج headless
       --count <n>         عدد العينات في وضع headless (0 = لا نهائي)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d عرض جميع قنوات IOReport المتاحة والخروج
       --unit-network <وحدة> وحدة الشبكة: auto, byte, kb, mb, gb (الافتراضي: auto)
       --unit-disk <وحدة>    وحدة القرص: auto, byte, kb, mb, gb (الافتراضي: auto)

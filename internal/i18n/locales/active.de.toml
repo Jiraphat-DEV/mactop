@@ -232,6 +232,7 @@ Optionen:
       --format <format>   Ausgabeformat festlegen (json, yaml, xml, csv, toon)
       --pretty            Headless-Ausgabe formatiert ausgeben
       --count <n>         Anzahl der Samples im Headless-Modus (0 = unendlich)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Alle verfügbaren IOReport-Kanäle ausgeben und beenden
       --unit-network <unit> Netzwerkeinheit: auto, byte, kb, mb, gb (Standard: auto)
       --unit-disk <unit>    Datenträgereinheit: auto, byte, kb, mb, gb (Standard: auto)

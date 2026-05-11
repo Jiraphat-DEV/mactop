@@ -232,6 +232,7 @@ Seçenekler:
       --format <format>   Çıktı formatını ayarla (json, yaml, xml, csv, toon)
       --pretty            Headless çıktıyı biçimlendir
       --count <n>         Headless modda örnek sayısı (0 = sonsuz)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Tüm IOReport kanallarını göster ve çık
       --unit-network <birim> Ağ birimi: auto, byte, kb, mb, gb (varsayılan: auto)
       --unit-disk <birim>    Disk birimi: auto, byte, kb, mb, gb (varsayılan: auto)
