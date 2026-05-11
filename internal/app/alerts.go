@@ -97,3 +97,87 @@ func NewAlerter(cfg AlertsConfig, n Notifier) *Alerter {
 		now:      time.Now,
 	}
 }
+
+// Check evaluates a single (source,value) pair against the configured limit.
+// It emits AlertEvents through the notifier when the latch flips
+// (below→above or above→below-hysteresis).
+func (a *Alerter) Check(src AlertSource, value float64) {
+	if !a.cfg.Enabled {
+		return
+	}
+	a.mu.Lock()
+	defer a.mu.Unlock()
+
+	limit, hyst := a.limitFor(src)
+	if limit <= 0 {
+		return
+	}
+
+	st := a.state[src]
+	now := a.now()
+
+	if !st.triggered && value > limit {
+		if !st.lastFire.IsZero() && now.Sub(st.lastFire) < time.Duration(a.cfg.CooldownMs)*time.Millisecond {
+			return
+		}
+		st.triggered = true
+		st.lastFire = now
+		a.state[src] = st
+		a.notifier.Notify(AlertEvent{
+			Source:    src,
+			Severity:  SeverityWarning,
+			Value:     value,
+			Limit:     limit,
+			Triggered: true,
+			Message:   formatAlertMessage(src, value, true),
+			At:        now,
+		})
+		return
+	}
+
+	if st.triggered && value < limit-hyst {
+		st.triggered = false
+		a.state[src] = st
+		a.notifier.Notify(AlertEvent{
+			Source:    src,
+			Severity:  SeverityNormal,
+			Value:     value,
+			Limit:     limit,
+			Triggered: false,
+			Message:   formatAlertMessage(src, value, false),
+			At:        now,
+		})
+	}
+}
+
+func (a *Alerter) limitFor(src AlertSource) (limit, hyst float64) {
+	switch src {
+	case AlertSourceCPUTemp:
+		return a.cfg.CPUTempC, a.cfg.HysteresisC
+	case AlertSourceGPUTemp:
+		return a.cfg.GPUTempC, a.cfg.HysteresisC
+	case AlertSourcePackagePower:
+		return a.cfg.PackagePowerW, a.cfg.HysteresisPct // reused as watt-window
+	case AlertSourceMemory:
+		return a.cfg.MemoryUsedPct, a.cfg.HysteresisPct
+	}
+	return 0, 0
+}
+
+func formatAlertMessage(src AlertSource, value float64, fired bool) string {
+	verb := "recovered"
+	if fired {
+		verb = "exceeded"
+	}
+	switch src {
+	case AlertSourceCPUTemp:
+		return fmt.Sprintf("CPU temperature %s: %.1f°C", verb, value)
+	case AlertSourceGPUTemp:
+		return fmt.Sprintf("GPU temperature %s: %.1f°C", verb, value)
+	case AlertSourcePackagePower:
+		return fmt.Sprintf("Package power %s: %.1fW", verb, value)
+	case AlertSourceMemory:
+		return fmt.Sprintf("Memory usage %s: %.1f%%", verb, value)
+	}
+	return ""
+}

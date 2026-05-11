@@ -102,3 +102,28 @@ func TestNotifierInterfaceImplementable(t *testing.T) {
 		t.Errorf("expected 1 event, got %d", len(cn.got))
 	}
 }
+
+func TestAlerter_FiresAndRecoversWithHysteresis(t *testing.T) {
+	cfg := DefaultAlertsConfig()
+	cfg.CPUTempC = 85
+	cfg.HysteresisC = 3
+	cfg.CooldownMs = 0 // disable cooldown for this test
+	n := &captureNotifier{}
+	a := NewAlerter(cfg, n)
+
+	a.Check(AlertSourceCPUTemp, 80) // below — no event
+	a.Check(AlertSourceCPUTemp, 86) // crosses → fire
+	a.Check(AlertSourceCPUTemp, 84) // still above limit-hysteresis (85-3=82) → no recover
+	a.Check(AlertSourceCPUTemp, 81) // below limit-hysteresis → recover
+	a.Check(AlertSourceCPUTemp, 81) // still recovered — no event
+
+	if len(n.got) != 2 {
+		t.Fatalf("expected 2 events, got %d: %v", len(n.got), n.got)
+	}
+	if !n.got[0].Triggered || n.got[0].Severity != SeverityWarning {
+		t.Errorf("event 0 = %+v, want triggered warning", n.got[0])
+	}
+	if n.got[1].Triggered {
+		t.Errorf("event 1 should be recover, got triggered=true")
+	}
+}
