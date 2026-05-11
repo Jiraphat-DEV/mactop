@@ -69,3 +69,36 @@ func TestResolveAlertsConfigUserCanDisable(t *testing.T) {
 		t.Errorf("Enabled = true, want false (override said false)")
 	}
 }
+
+func TestAlertEventStringer(t *testing.T) {
+	ev := AlertEvent{
+		Source:   AlertSourceCPUTemp,
+		Severity: SeverityWarning,
+		Value:    91.2,
+		Limit:    85,
+		Message:  "CPU 91.2°C",
+	}
+	if got := ev.String(); got == "" {
+		t.Errorf("AlertEvent.String() returned empty")
+	}
+}
+
+func TestSeverityOrdering(t *testing.T) {
+	if !(SeverityNormal < SeverityWarning && SeverityWarning < SeverityCritical) {
+		t.Errorf("severity order broken: %d %d %d", SeverityNormal, SeverityWarning, SeverityCritical)
+	}
+}
+
+type captureNotifier struct {
+	got []AlertEvent
+}
+
+func (c *captureNotifier) Notify(ev AlertEvent) { c.got = append(c.got, ev) }
+
+func TestNotifierInterfaceImplementable(t *testing.T) {
+	var n Notifier = &captureNotifier{}
+	n.Notify(AlertEvent{Source: AlertSourceCPUTemp})
+	if cn := n.(*captureNotifier); len(cn.got) != 1 {
+		t.Errorf("expected 1 event, got %d", len(cn.got))
+	}
+}
