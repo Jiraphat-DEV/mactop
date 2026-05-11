@@ -707,7 +707,6 @@ func Run() {
 	// to their default values, which would clear the statusMode flag set by handleLegacyFlags.
 	if statusMode {
 		loadConfig()
-		alerter = NewAlerter(ResolveAlertsConfig(currentConfig.Alerts), newStderrNotifier(stderrLogger))
 		runStatusOneLiner()
 		return
 	}
