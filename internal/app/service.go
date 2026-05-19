@@ -111,3 +111,23 @@ func installService(opt installOptions) error {
 	_ = launchctlBootout(opt.Runner, paths.PlistPath, opt.UID)
 	return launchctlBootstrap(opt.Runner, paths.PlistPath, opt.UID)
 }
+
+type uninstallOptions struct {
+	Home   string
+	UID    int
+	Runner cmdRunner
+}
+
+func uninstallService(opt uninstallOptions) error {
+	paths, err := installPathsForHome(opt.Home)
+	if err != nil {
+		return err
+	}
+	// bootout first (ignore failure; service may already be down)
+	_ = launchctlBootout(opt.Runner, paths.PlistPath, opt.UID)
+
+	if err := os.Remove(paths.PlistPath); err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("remove plist: %w", err)
+	}
+	return nil
+}

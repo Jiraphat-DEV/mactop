@@ -131,3 +131,33 @@ func TestInstall_OverwritesExistingPlist(t *testing.T) {
 		t.Errorf("plist not overwritten with new exec path")
 	}
 }
+
+func TestUninstall_RemovesPlistAndCallsBootout(t *testing.T) {
+	tmp := t.TempDir()
+	r := &fakeRunner{}
+	opt := installOptions{ExecPath: "/x/mactop", Home: tmp, UID: 501, Runner: r}
+	if err := installService(opt); err != nil {
+		t.Fatal(err)
+	}
+	r.calls = nil
+
+	if err := uninstallService(uninstallOptions{Home: tmp, UID: 501, Runner: r}); err != nil {
+		t.Fatal(err)
+	}
+
+	plistPath := tmp + "/Library/LaunchAgents/com.metaspartan.mactop.plist"
+	if _, err := os.Stat(plistPath); !os.IsNotExist(err) {
+		t.Errorf("plist still exists")
+	}
+	if len(r.calls) != 1 || r.calls[0][1] != "bootout" {
+		t.Errorf("expected bootout call, got %v", r.calls)
+	}
+}
+
+func TestUninstall_NoErrorIfNotInstalled(t *testing.T) {
+	r := &fakeRunner{}
+	tmp := t.TempDir()
+	if err := uninstallService(uninstallOptions{Home: tmp, UID: 501, Runner: r}); err != nil {
+		t.Errorf("expected nil error on missing install, got %v", err)
+	}
+}
