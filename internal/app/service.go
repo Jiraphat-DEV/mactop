@@ -8,6 +8,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/metaspartan/mactop/v2/internal/i18n"
 )
 
 const serviceLabel = "com.metaspartan.mactop"
@@ -130,4 +132,44 @@ func uninstallService(opt uninstallOptions) error {
 		return fmt.Errorf("remove plist: %w", err)
 	}
 	return nil
+}
+
+func runInstall() {
+	exec, err := os.Executable()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, i18n.T("Service_InstallResolveExecFailed"), err)
+		os.Exit(1)
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, i18n.T("Service_InstallHomeFailed"), err)
+		os.Exit(1)
+	}
+	if err := installService(installOptions{
+		ExecPath: exec,
+		Home:     home,
+		UID:      os.Getuid(),
+		Runner:   execRunner{},
+	}); err != nil {
+		fmt.Fprintln(os.Stderr, i18n.T("Service_InstallFailed"), err)
+		os.Exit(1)
+	}
+	fmt.Println(i18n.T("Service_InstallSuccess"))
+}
+
+func runUninstall() {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, i18n.T("Service_InstallHomeFailed"), err)
+		os.Exit(1)
+	}
+	if err := uninstallService(uninstallOptions{
+		Home:   home,
+		UID:    os.Getuid(),
+		Runner: execRunner{},
+	}); err != nil {
+		fmt.Fprintln(os.Stderr, i18n.T("Service_UninstallFailed"), err)
+		os.Exit(1)
+	}
+	fmt.Println(i18n.T("Service_UninstallSuccess"))
 }
