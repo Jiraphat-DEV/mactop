@@ -31,3 +31,22 @@ func TestRenderPlist_EscapesAmpersands(t *testing.T) {
 		t.Errorf("renderPlist did not XML-escape '&' in path")
 	}
 }
+
+func TestInstallPaths_ReturnsHomeBasedPaths(t *testing.T) {
+	got, err := installPathsForHome("/Users/alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.PlistPath != "/Users/alice/Library/LaunchAgents/com.metaspartan.mactop.plist" {
+		t.Errorf("PlistPath = %q", got.PlistPath)
+	}
+	if got.LogPath != "/Users/alice/.mactop/daemon.log" {
+		t.Errorf("LogPath = %q", got.LogPath)
+	}
+}
+
+func TestInstallPaths_RejectsEmptyHome(t *testing.T) {
+	if _, err := installPathsForHome(""); err == nil {
+		t.Error("expected error for empty home")
+	}
+}

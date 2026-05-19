@@ -2,7 +2,9 @@ package app
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
+	"path/filepath"
 	"strings"
 )
 
@@ -41,4 +43,21 @@ func renderPlist(execPath, logPath string) string {
 </dict>
 </plist>
 `, serviceLabel, esc(execPath), esc(logPath), esc(logPath))
+}
+
+type installPaths struct {
+	PlistPath string
+	LogPath   string
+	HomeDir   string
+}
+
+func installPathsForHome(home string) (installPaths, error) {
+	if home == "" {
+		return installPaths{}, errors.New("home directory not resolved")
+	}
+	return installPaths{
+		PlistPath: filepath.Join(home, "Library", "LaunchAgents", serviceLabel+".plist"),
+		LogPath:   filepath.Join(home, ".mactop", "daemon.log"),
+		HomeDir:   home,
+	}, nil
 }
