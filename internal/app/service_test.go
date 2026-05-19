@@ -1,6 +1,7 @@
 package app
 
 import (
+	"os"
 	"strings"
 	"testing"
 )
@@ -87,5 +88,46 @@ func TestLaunchctlBootout_CallsBootout(t *testing.T) {
 		if r.calls[0][i] != w {
 			t.Errorf("call arg[%d] = %q, want %q", i, r.calls[0][i], w)
 		}
+	}
+}
+
+func TestInstall_WritesPlistAndCallsBootstrap(t *testing.T) {
+	tmp := t.TempDir()
+	r := &fakeRunner{}
+
+	err := installService(installOptions{
+		ExecPath: "/usr/local/bin/mactop",
+		Home:     tmp,
+		UID:      501,
+		Runner:   r,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	plistPath := tmp + "/Library/LaunchAgents/com.metaspartan.mactop.plist"
+	if _, err := os.Stat(plistPath); err != nil {
+		t.Fatalf("plist not written: %v", err)
+	}
+
+	if len(r.calls) != 2 || r.calls[1][1] != "bootstrap" {
+		t.Errorf("expected bootout then bootstrap calls, got %v", r.calls)
+	}
+}
+
+func TestInstall_OverwritesExistingPlist(t *testing.T) {
+	tmp := t.TempDir()
+	r := &fakeRunner{}
+	opt := installOptions{ExecPath: "/old/path/mactop", Home: tmp, UID: 501, Runner: r}
+	if err := installService(opt); err != nil {
+		t.Fatal(err)
+	}
+	opt.ExecPath = "/new/path/mactop"
+	if err := installService(opt); err != nil {
+		t.Fatal(err)
+	}
+	data, _ := os.ReadFile(tmp + "/Library/LaunchAgents/com.metaspartan.mactop.plist")
+	if !strings.Contains(string(data), "/new/path/mactop") {
+		t.Errorf("plist not overwritten with new exec path")
 	}
 }

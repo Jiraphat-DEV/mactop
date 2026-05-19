@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -80,4 +81,33 @@ func launchctlBootstrap(r cmdRunner, plistPath string, uid int) error {
 
 func launchctlBootout(r cmdRunner, plistPath string, uid int) error {
 	return r.Run("/bin/launchctl", "bootout", fmt.Sprintf("gui/%d", uid), plistPath)
+}
+
+type installOptions struct {
+	ExecPath string
+	Home     string
+	UID      int
+	Runner   cmdRunner
+}
+
+func installService(opt installOptions) error {
+	paths, err := installPathsForHome(opt.Home)
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(paths.PlistPath), 0755); err != nil {
+		return fmt.Errorf("mkdir LaunchAgents: %w", err)
+	}
+	if err := os.MkdirAll(filepath.Dir(paths.LogPath), 0755); err != nil {
+		return fmt.Errorf("mkdir .mactop: %w", err)
+	}
+
+	contents := renderPlist(opt.ExecPath, paths.LogPath)
+	if err := os.WriteFile(paths.PlistPath, []byte(contents), 0644); err != nil {
+		return fmt.Errorf("write plist: %w", err)
+	}
+
+	// Best-effort: ignore "already loaded" errors by attempting bootout first.
+	_ = launchctlBootout(opt.Runner, paths.PlistPath, opt.UID)
+	return launchctlBootstrap(opt.Runner, paths.PlistPath, opt.UID)
 }
