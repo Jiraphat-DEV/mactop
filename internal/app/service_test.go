@@ -50,3 +50,42 @@ func TestInstallPaths_RejectsEmptyHome(t *testing.T) {
 		t.Error("expected error for empty home")
 	}
 }
+
+type fakeRunner struct {
+	calls [][]string
+	err   error
+}
+
+func (f *fakeRunner) Run(name string, args ...string) error {
+	f.calls = append(f.calls, append([]string{name}, args...))
+	return f.err
+}
+
+func TestLaunchctlBootstrap_CallsLoad(t *testing.T) {
+	r := &fakeRunner{}
+	if err := launchctlBootstrap(r, "/path/to.plist", 501); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.calls) != 1 {
+		t.Fatalf("expected 1 call, got %d", len(r.calls))
+	}
+	want := []string{"/bin/launchctl", "bootstrap", "gui/501", "/path/to.plist"}
+	for i, w := range want {
+		if r.calls[0][i] != w {
+			t.Errorf("call arg[%d] = %q, want %q", i, r.calls[0][i], w)
+		}
+	}
+}
+
+func TestLaunchctlBootout_CallsBootout(t *testing.T) {
+	r := &fakeRunner{}
+	if err := launchctlBootout(r, "/path/to.plist", 501); err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"/bin/launchctl", "bootout", "gui/501", "/path/to.plist"}
+	for i, w := range want {
+		if r.calls[0][i] != w {
+			t.Errorf("call arg[%d] = %q, want %q", i, r.calls[0][i], w)
+		}
+	}
+}

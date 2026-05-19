@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -60,4 +61,23 @@ func installPathsForHome(home string) (installPaths, error) {
 		LogPath:   filepath.Join(home, ".mactop", "daemon.log"),
 		HomeDir:   home,
 	}, nil
+}
+
+// cmdRunner abstracts os/exec so tests don't shell out.
+type cmdRunner interface {
+	Run(name string, args ...string) error
+}
+
+type execRunner struct{}
+
+func (execRunner) Run(name string, args ...string) error {
+	return exec.Command(name, args...).Run()
+}
+
+func launchctlBootstrap(r cmdRunner, plistPath string, uid int) error {
+	return r.Run("/bin/launchctl", "bootstrap", fmt.Sprintf("gui/%d", uid), plistPath)
+}
+
+func launchctlBootout(r cmdRunner, plistPath string, uid int) error {
+	return r.Run("/bin/launchctl", "bootout", fmt.Sprintf("gui/%d", uid), plistPath)
 }
