@@ -62,6 +62,8 @@ func handleFlag(arg string, idx int, args []string) (int, string, int, bool, boo
 		fmt.Println(i18n.T("CLI_DumpingIOReport"))
 		DebugIOReport()
 		os.Exit(0)
+	case "status":
+		statusMode = true
 	}
 	return emptyResult(idx).values()
 }

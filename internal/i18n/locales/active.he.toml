@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <פורמט>    הגדר פורמט פלט (json, yaml, xml, csv, toon)
       --pretty            עצב פלט headless
       --count <n>         מספר דגימות במצב headless (0 = אינסוף)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d הצג את כל ערוצי IOReport הזמינים וצא
       --unit-network <יח׳> יחידת רשת: auto, byte, kb, mb, gb (ברירת מחדל: auto)
       --unit-disk <יח׳>    יחידת דיסק: auto, byte, kb, mb, gb (ברירת מחדל: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "אלחוטי"
 TempCategory_Display = "תצוגה"
 TempCategory_Other = "אחר"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

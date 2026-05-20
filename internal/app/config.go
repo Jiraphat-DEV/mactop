@@ -78,6 +78,7 @@ type AppConfig struct {
 	CustomTheme   *CustomThemeConfig `json:"custom_theme,omitempty"`
 	MenuBar       *MenuBarConfig     `json:"menubar,omitempty"`
 	Overlay       *OverlayConfig     `json:"overlay,omitempty"`
+	Alerts        *AlertsConfig      `json:"alerts,omitempty"`
 }
 
 // intOrDefault returns v if > 0, otherwise def.

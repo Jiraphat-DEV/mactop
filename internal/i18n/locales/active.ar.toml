@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <صيغة>     تعيين صيغة الإخراج (json, yaml, xml, csv, toon)
       --pretty            تنسيق إخراج headless
       --count <n>         عدد العينات في وضع headless (0 = لا نهائي)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d عرض جميع قنوات IOReport المتاحة والخروج
       --unit-network <وحدة> وحدة الشبكة: auto, byte, kb, mb, gb (الافتراضي: auto)
       --unit-disk <وحدة>    وحدة القرص: auto, byte, kb, mb, gb (الافتراضي: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "لاسلكي"
 TempCategory_Display = "العرض"
 TempCategory_Other = "أخرى"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

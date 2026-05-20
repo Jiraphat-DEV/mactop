@@ -232,6 +232,7 @@ Seçenekler:
       --format <format>   Çıktı formatını ayarla (json, yaml, xml, csv, toon)
       --pretty            Headless çıktıyı biçimlendir
       --count <n>         Headless modda örnek sayısı (0 = sonsuz)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Tüm IOReport kanallarını göster ve çık
       --unit-network <birim> Ağ birimi: auto, byte, kb, mb, gb (varsayılan: auto)
       --unit-disk <birim>    Disk birimi: auto, byte, kb, mb, gb (varsayılan: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "Kablosuz"
 TempCategory_Display = "Ekran"
 TempCategory_Other = "Diğer"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

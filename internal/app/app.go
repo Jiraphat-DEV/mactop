@@ -541,6 +541,10 @@ func runAlternateMode() bool {
 		DumpDisplayFPSDiagnostics()
 		return true
 	}
+	if statusMode {
+		runStatusOneLiner()
+		return true
+	}
 	if menubarWorker {
 		startMenuBarWorker()
 		return true
@@ -608,6 +612,9 @@ func drainSeededMetrics() {
 	select {
 	case cpuMetrics := <-cpuMetricsChan:
 		lastCPUMetrics = cpuMetrics
+		if alerter != nil {
+			alerter.OnCPUMetrics(cpuMetrics)
+		}
 		updateCPUUI(cpuMetrics)
 		updateTotalPowerChart(cpuMetrics.PackageW)
 	default:
@@ -695,9 +702,27 @@ func Run() {
 	}
 	defer logfile.Close()
 
+	// Check for bare-argv subcommands (e.g. "mactop status") that were set by handleLegacyFlags.
+	// We must run them BEFORE parseCommandLineFlags() because flag.BoolVar() resets variables
+	// to their default values, which would clear the statusMode flag set by handleLegacyFlags.
+	if statusMode {
+		loadConfig()
+		// Resolve language: CLI flag > MACTOP_LANG > config.json > earlier system default.
+		lang := earlyResolveLanguage()
+		if lang == "" {
+			lang = currentConfig.Language
+		}
+		if lang != "" {
+			i18n.Init(lang)
+		}
+		runStatusOneLiner()
+		return
+	}
+
 	parseCommandLineFlags()
 
 	loadConfig()
+	alerter = NewAlerter(ResolveAlertsConfig(currentConfig.Alerts), newStderrNotifier(stderrLogger))
 
 	// Load saved sort column from config (only if explicitly set)
 	if currentConfig.SortColumn != nil && *currentConfig.SortColumn >= 0 && *currentConfig.SortColumn < len(columns) {
@@ -895,6 +920,9 @@ func updateCPUUI(cpuMetrics CPUMetrics) {
 	updatePowerChartText(cpuMetrics, thermalStr)
 
 	memoryMetrics := getMemoryMetrics()
+	if alerter != nil {
+		alerter.OnMemory(memoryMetrics)
+	}
 	updateMemoryGaugeTitle(memoryMetrics)
 	memoryPercent := (float64(memoryMetrics.Used) / float64(memoryMetrics.Total)) * 100
 	memoryGauge.Percent = int(memoryPercent)
@@ -1435,6 +1463,7 @@ func parseCommandLineFlags() {
 	flag.BoolVar(&dumpTemps, "dump-temps", false, "Diagnostic: dump all raw SMC temperature keys and exit")
 	flag.BoolVar(&dumpDebug, "dump-debug", false, "Diagnostic: dump IOReport/HID/SMC/NVMe debug info and exit")
 	flag.BoolVar(&dumpFPS, "dump-fps", false, "Diagnostic: dump display info and test CGDisplayStream FPS at multiple sizes")
+	flag.BoolVar(&statusMode, "status", false, "Print a one-line health summary and exit")
 }
 
 func setupMainBlockLayout(termWidth, termHeight int) {

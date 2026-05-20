@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <फ़ॉर्मेट>  आउटपुट फ़ॉर्मेट सेट करें (json, yaml, xml, csv, toon)
       --pretty            Headless आउटपुट फ़ॉर्मेट करें
       --count <n>         Headless मोड में सैंपल संख्या (0 = अनंत)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d सभी उपलब्ध IOReport चैनल दिखाएँ और बाहर निकलें
       --unit-network <इकाई> नेटवर्क इकाई: auto, byte, kb, mb, gb (डिफ़ॉल्ट: auto)
       --unit-disk <इकाई>    डिस्क इकाई: auto, byte, kb, mb, gb (डिफ़ॉल्ट: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "वायरलेस"
 TempCategory_Display = "डिस्प्ले"
 TempCategory_Other = "अन्य"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

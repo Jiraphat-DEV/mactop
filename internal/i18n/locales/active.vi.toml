@@ -232,6 +232,7 @@ Tùy chọn:
       --format <dạng>     Đặt định dạng xuất (json, yaml, xml, csv, toon)
       --pretty            Định dạng đầu ra headless
       --count <n>         Số mẫu ở chế độ headless (0 = vô hạn)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Hiển thị tất cả kênh IOReport và thoát
       --unit-network <đv> Đơn vị mạng: auto, byte, kb, mb, gb (mặc định: auto)
       --unit-disk <đv>    Đơn vị đĩa: auto, byte, kb, mb, gb (mặc định: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "Không dây"
 TempCategory_Display = "Màn hình"
 TempCategory_Other = "Khác"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

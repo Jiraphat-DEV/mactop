@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <รูปแบบ>    ตั้งรูปแบบเอาต์พุต (json, yaml, xml, csv, toon)
       --pretty            จัดรูปแบบเอาต์พุต headless
       --count <n>         จำนวนตัวอย่างในโหมด headless (0 = ไม่จำกัด)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d แสดงทุกช่อง IOReport ที่มีและออก
       --unit-network <หน่วย> หน่วยเครือข่าย: auto, byte, kb, mb, gb (ค่าเริ่มต้น: auto)
       --unit-disk <หน่วย>    หน่วยดิสก์: auto, byte, kb, mb, gb (ค่าเริ่มต้น: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "ไร้สาย"
 TempCategory_Display = "จอแสดงผล"
 TempCategory_Other = "อื่น ๆ"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

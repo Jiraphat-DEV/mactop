@@ -232,6 +232,7 @@ Opsi:
       --format <format>   Atur format output (json, yaml, xml, csv, toon)
       --pretty            Format output headless
       --count <n>         Jumlah sampel dalam mode headless (0 = tak terbatas)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Tampilkan semua kanal IOReport yang tersedia dan keluar
       --unit-network <unit> Unit jaringan: auto, byte, kb, mb, gb (default: auto)
       --unit-disk <unit>    Unit disk: auto, byte, kb, mb, gb (default: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "Nirkabel"
 TempCategory_Display = "Layar"
 TempCategory_Other = "Lainnya"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

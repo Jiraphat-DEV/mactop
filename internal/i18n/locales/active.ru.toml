@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <формат>   Установить формат вывода (json, yaml, xml, csv, toon)
       --pretty            Форматированный вывод в headless режиме
       --count <n>         Количество выборок в headless режиме (0 = бесконечно)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Показать все доступные каналы IOReport и выйти
       --unit-network <ед> Единица сети: auto, byte, kb, mb, gb (по умолчанию: auto)
       --unit-disk <ед>    Единица диска: auto, byte, kb, mb, gb (по умолчанию: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "Беспровод."
 TempCategory_Display = "Дисплей"
 TempCategory_Other = "Другое"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

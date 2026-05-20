@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <format>   出力形式を指定 (json, yaml, xml, csv, toon)
       --pretty            ヘッドレス出力を整形表示
       --count <n>         ヘッドレスで収集するサンプル数 (0 = 無限)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d 利用可能な IOReport チャンネルをすべて出力して終了
       --unit-network <unit> ネットワーク単位: auto, byte, kb, mb, gb (デフォルト: auto)
       --unit-disk <unit>    ディスク単位: auto, byte, kb, mb, gb (デフォルト: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "無線"
 TempCategory_Display = "ディスプレイ"
 TempCategory_Other = "その他"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

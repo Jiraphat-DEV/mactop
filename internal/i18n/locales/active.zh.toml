@@ -233,6 +233,7 @@ CLI_HelpText = """
       --format <format>   设置输出格式（json, yaml, xml, csv, toon）
       --pretty            美化 headless 输出
       --count <n>         headless 模式采样次数（0 = 无限）
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d 输出所有可用的 IOReport 通道并退出
       --unit-network <unit> 网络单位：auto, byte, kb, mb, gb（默认：auto）
       --unit-disk <unit>    磁盘单位：auto, byte, kb, mb, gb（默认：auto）
@@ -356,3 +357,13 @@ TempCategory_Thunderbolt = "雷电"
 TempCategory_Wireless = "无线"
 TempCategory_Display = "显示"
 TempCategory_Other = "其他"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

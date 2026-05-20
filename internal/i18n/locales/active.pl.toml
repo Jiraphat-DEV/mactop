@@ -232,6 +232,7 @@ Opcje:
       --format <format>   Ustaw format wyjścia (json, yaml, xml, csv, toon)
       --pretty            Formatuj wyjście headless
       --count <n>         Liczba próbek w trybie headless (0 = nieskończona)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Pokaż wszystkie dostępne kanały IOReport i zakończ
       --unit-network <jedn> Jednostka sieci: auto, byte, kb, mb, gb (domyślnie: auto)
       --unit-disk <jedn>    Jednostka dysku: auto, byte, kb, mb, gb (domyślnie: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "Bezprzewodowy"
 TempCategory_Display = "Ekran"
 TempCategory_Other = "Inne"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

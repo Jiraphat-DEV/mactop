@@ -233,6 +233,7 @@ Options:
       --format <format>   Set the output format (json, yaml, xml, csv, toon)
       --pretty            Pretty print headless output
       --count <n>         Number of samples to collect in headless mode (0 = infinite)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Dump all available IOReport channels and exit
       --unit-network <unit> Network unit: auto, byte, kb, mb, gb (default: auto)
       --unit-disk <unit>    Disk unit: auto, byte, kb, mb, gb (default: auto)
@@ -329,6 +330,16 @@ Overlay_GPUFreqTFLOPs = "%dMHz • %.1f TFLOPS"
 Overlay_GPUFreqMHz = "%d MHz"
 Overlay_TempsDual = "CPU %.0f°C  GPU %.0f°C"
 Overlay_TempsSingle = "%.0f°C"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"
 
 # Fan modes & temperature categories
 Fan_Mode_Auto = "Auto"

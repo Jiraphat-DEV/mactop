@@ -232,6 +232,7 @@ CLI_HelpText = """
       --format <format>   출력 형식 설정 (json, yaml, xml, csv, toon)
       --pretty            헤드리스 출력을 보기 좋게 포맷
       --count <n>         헤드리스 모드에서 수집할 샘플 수 (0 = 무한)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d 사용 가능한 모든 IOReport 채널을 출력하고 종료
       --unit-network <unit> 네트워크 단위: auto, byte, kb, mb, gb (기본값: auto)
       --unit-disk <unit>    디스크 단위: auto, byte, kb, mb, gb (기본값: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "무선"
 TempCategory_Display = "디스플레이"
 TempCategory_Other = "기타"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"

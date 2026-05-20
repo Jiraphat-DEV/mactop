@@ -232,6 +232,7 @@ Opties:
       --format <formaat>  Uitvoerformaat instellen (json, yaml, xml, csv, toon)
       --pretty            Headless-uitvoer opmaken
       --count <n>         Aantal samples in headless-modus (0 = oneindig)
+      --status            Print a one-line health summary and exit
       --dump-ioreport, -d Alle beschikbare IOReport-kanalen tonen en afsluiten
       --unit-network <eenheid> Netwerkeenheid: auto, byte, kb, mb, gb (standaard: auto)
       --unit-disk <eenheid>    Schijfeenheid: auto, byte, kb, mb, gb (standaard: auto)
@@ -355,3 +356,13 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "Draadloos"
 TempCategory_Display = "Scherm"
 TempCategory_Other = "Overig"
+
+Status_Normal = "Normal"
+Status_Warning = "Warning"
+Status_Critical = "Critical"
+Alerts_CPUTemp = "CPU temperature %s: %.1f°C"
+Alerts_GPUTemp = "GPU temperature %s: %.1f°C"
+Alerts_PackagePower = "Package power %s: %.1fW"
+Alerts_Memory = "Memory usage %s: %.1f%%"
+Alerts_Exceeded = "exceeded"
+Alerts_Recovered = "recovered"
