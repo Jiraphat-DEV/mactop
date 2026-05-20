@@ -38,6 +38,8 @@ func renderPlist(execPath, logPath string) string {
     <true/>
     <key>KeepAlive</key>
     <true/>
+    <key>ThrottleInterval</key>
+    <integer>15</integer>
     <key>StandardOutPath</key>
     <string>%s</string>
     <key>StandardErrorPath</key>

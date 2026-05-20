@@ -17,6 +17,8 @@ func TestRenderPlist_ContainsRequiredKeys(t *testing.T) {
 		"<key>RunAtLoad</key>",
 		"<true/>",
 		"<key>KeepAlive</key>",
+		"<key>ThrottleInterval</key>",
+		"<integer>15</integer>",
 		"<key>StandardOutPath</key>",
 		"<string>/Users/alice/.mactop/daemon.log</string>",
 	} {
