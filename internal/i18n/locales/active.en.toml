@@ -246,6 +246,9 @@ Options:
       --fan-control       Enable interactive fan speed control (writes to SMC)
       --dump-temps        Diagnostic: dump all raw SMC temperature keys and exit
       --dump-debug        Diagnostic: dump IOReport/HID/SMC/NVMe debug info and exit
+      --install           Install mactop as a launchd background agent
+      --uninstall         Remove the mactop launchd background agent
+      --daemon            Run as a headless daemon (used by launchd)
 
 Theme File:
   Create ~/.mactop/theme.json with custom hex colors:
@@ -367,3 +370,11 @@ TempCategory_Thunderbolt = "Thunderbolt"
 TempCategory_Wireless = "Wireless"
 TempCategory_Display = "Display"
 TempCategory_Other = "Other"
+
+Service_InstallSuccess = "✓ mactop installed. It will run in the background and on every login."
+Service_InstallFailed = "✗ Failed to install mactop:"
+Service_InstallResolveExecFailed = "Could not resolve mactop executable path:"
+Service_InstallHomeFailed = "Could not resolve home directory:"
+Service_UninstallSuccess = "✓ mactop background service removed."
+Service_UninstallFailed = "✗ Failed to uninstall mactop:"
+Service_AlreadyInstalled = "mactop is already installed; reinstalling."

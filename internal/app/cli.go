@@ -64,6 +64,12 @@ func handleFlag(arg string, idx int, args []string) (int, string, int, bool, boo
 		os.Exit(0)
 	case "status":
 		statusMode = true
+	case "install":
+		installMode = true
+	case "uninstall":
+		uninstallMode = true
+	case "daemon":
+		daemonMode = true
 	}
 	return emptyResult(idx).values()
 }

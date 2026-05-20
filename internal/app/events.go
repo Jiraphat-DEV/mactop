@@ -16,6 +16,9 @@ func startBackgroundUpdates(done chan struct{}) {
 			case <-ticker.C:
 				select {
 				case cpuMetrics := <-cpuMetricsChan:
+					// Lock order invariant: renderMutex must be acquired BEFORE
+					// any alerter operation (which internally takes a.mu).
+					// Reversing this order would deadlock.
 					renderMutex.Lock()
 					lastCPUMetrics = cpuMetrics
 					if alerter != nil {
