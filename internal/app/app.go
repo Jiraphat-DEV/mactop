@@ -731,10 +731,26 @@ func Run() {
 		return
 	}
 	if installMode {
+		loadConfig()
+		lang := earlyResolveLanguage()
+		if lang == "" {
+			lang = currentConfig.Language
+		}
+		if lang != "" {
+			i18n.Init(lang)
+		}
 		runInstall()
 		return
 	}
 	if uninstallMode {
+		loadConfig()
+		lang := earlyResolveLanguage()
+		if lang == "" {
+			lang = currentConfig.Language
+		}
+		if lang != "" {
+			i18n.Init(lang)
+		}
 		runUninstall()
 		return
 	}
