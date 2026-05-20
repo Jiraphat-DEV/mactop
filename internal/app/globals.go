@@ -152,6 +152,12 @@ var alerter *Alerter
 var statusMode bool
 
 var (
+	installMode   bool
+	uninstallMode bool
+	daemonMode    bool
+)
+
+var (
 	cpuUsage = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: "mactop_cpu_usage_percent",

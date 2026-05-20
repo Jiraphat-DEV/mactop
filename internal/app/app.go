@@ -553,6 +553,18 @@ func runAlternateMode() bool {
 		startOverlayWorker()
 		return true
 	}
+	if installMode {
+		runInstall()
+		return true
+	}
+	if uninstallMode {
+		runUninstall()
+		return true
+	}
+	if daemonMode {
+		runDaemon()
+		return true
+	}
 	if headless {
 		runHeadless(headlessCount)
 		return true
@@ -716,6 +728,43 @@ func Run() {
 			i18n.Init(lang)
 		}
 		runStatusOneLiner()
+		return
+	}
+	if installMode {
+		loadConfig()
+		lang := earlyResolveLanguage()
+		if lang == "" {
+			lang = currentConfig.Language
+		}
+		if lang != "" {
+			i18n.Init(lang)
+		}
+		runInstall()
+		return
+	}
+	if uninstallMode {
+		loadConfig()
+		lang := earlyResolveLanguage()
+		if lang == "" {
+			lang = currentConfig.Language
+		}
+		if lang != "" {
+			i18n.Init(lang)
+		}
+		runUninstall()
+		return
+	}
+	if daemonMode {
+		loadConfig()
+		// Resolve i18n language from config (same priority chain as status)
+		lang := earlyResolveLanguage()
+		if lang == "" {
+			lang = currentConfig.Language
+		}
+		if lang != "" {
+			i18n.Init(lang)
+		}
+		runDaemon()
 		return
 	}
 
@@ -1464,6 +1513,9 @@ func parseCommandLineFlags() {
 	flag.BoolVar(&dumpDebug, "dump-debug", false, "Diagnostic: dump IOReport/HID/SMC/NVMe debug info and exit")
 	flag.BoolVar(&dumpFPS, "dump-fps", false, "Diagnostic: dump display info and test CGDisplayStream FPS at multiple sizes")
 	flag.BoolVar(&statusMode, "status", false, "Print a one-line health summary and exit")
+	flag.BoolVar(&installMode, "install", false, "Install mactop as a launchd background agent")
+	flag.BoolVar(&uninstallMode, "uninstall", false, "Remove the mactop launchd background agent")
+	flag.BoolVar(&daemonMode, "daemon", false, "Run as a headless daemon (used by launchd)")
 }
 
 func setupMainBlockLayout(termWidth, termHeight int) {
