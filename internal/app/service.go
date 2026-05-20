@@ -137,7 +137,7 @@ func uninstallService(opt uninstallOptions) error {
 }
 
 func runInstall() {
-	exec, err := os.Executable()
+	execPath, err := os.Executable()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, i18n.T("Service_InstallResolveExecFailed"), err)
 		os.Exit(1)
@@ -148,7 +148,7 @@ func runInstall() {
 		os.Exit(1)
 	}
 	if err := installService(installOptions{
-		ExecPath: exec,
+		ExecPath: execPath,
 		Home:     home,
 		UID:      os.Getuid(),
 		Runner:   execRunner{},
