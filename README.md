@@ -81,6 +81,30 @@ brew update
 brew upgrade mactop
 ```
 
+## Install the Jiraphat-DEV fork (customized version)
+
+This repository is a fork of [`metaspartan/mactop`](https://github.com/metaspartan/mactop) with extra features layered on top:
+
+- **Smart Alert Engine** — threshold-based alerts for CPU/GPU/memory/temperature with severity levels.
+- **`mactop status`** — a one-shot, scriptable health one-liner (no TUI).
+- **Background service mode** — `mactop install` / `mactop uninstall` register a `launchd` agent that runs mactop headless and posts native macOS notifications when alerts fire.
+
+Install it from this fork's Homebrew tap (builds from source — needs the Xcode Command Line Tools, which most Macs already have):
+
+```bash
+brew tap jiraphat-dev/mactop
+brew install jiraphat-dev/mactop/mactop
+```
+
+> The formula installs a `mactop` binary, so it `conflicts_with` the homebrew-core `mactop`. If you already have the upstream build, run `brew uninstall mactop` first.
+
+Update later with:
+
+```bash
+brew update
+brew upgrade jiraphat-dev/mactop/mactop
+```
+
 ## Installation
 
 To install `mactop`, follow these steps:
