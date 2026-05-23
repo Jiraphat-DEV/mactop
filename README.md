@@ -92,8 +92,8 @@ This repository is a fork of [`metaspartan/mactop`](https://github.com/metaspart
 Install it from this fork's Homebrew tap (builds from source — needs the Xcode Command Line Tools, which most Macs already have):
 
 ```bash
-brew tap jiraphat-dev/mactop
-brew install jiraphat-dev/mactop/mactop
+brew tap jiraphat-dev/tap
+brew install jiraphat-dev/tap/mactop
 ```
 
 > The formula installs a `mactop` binary, so it `conflicts_with` the homebrew-core `mactop`. If you already have the upstream build, run `brew uninstall mactop` first.
@@ -102,7 +102,7 @@ Update later with:
 
 ```bash
 brew update
-brew upgrade jiraphat-dev/mactop/mactop
+brew upgrade jiraphat-dev/tap/mactop
 ```
 
 ## Installation
